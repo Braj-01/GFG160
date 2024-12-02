@@ -1,0 +1,193 @@
+Given an integer array arr[], the task is to divide the array into three non-empty contiguous segments with equal sum. In other words, we need to return an index pair [i, j], such that sum(arr[0...i]) = sum(arr[i+1...j]) = sum(arr[j+1...n-1]).
+
+Note: If it is impossible to divide the array into three non-empty contiguous segments, return [-1, -1].
+
+Examples:
+
+Input: arr[] = [1, 3, 4, 0, 4]
+Output: [1, 2]
+Explanation: 3 equal sum segments are: arr[0...1], arr[2...2] and arr[3...4] each having sum = 4.
+
+Input: arr[] = [2, 3, 4]
+Output: [-1, -1]
+Explanation: No three segments exist which has equal sum.
+
+Input: arr[] = [1, -1, 1, -1, 1, -1, 1, -1]
+Output: [1, 3]
+Explanation: 3 equal sum segments are: arr[0...1], arr[2...3] and arr[4...7] each having sum = 0.
+
+Table of Content
+
+[Naive Approach] By finding all possible partitions - O(n^3) Time and O(1) Space
+[Expected Approach] Finding first two segments- O(n) Time and O(1) Space
+[Naive Approach] By finding all possible partitions - O(n^3) Time and O(1) Space
+The idea is to try all possible partitions using two variables, say i and j such that the first segment will be arr[0...i], the second segment will be arr[i+1...j] and the third segment will be arr[j+1...n-1]. For any partition, if the sum of all three segments are equal, then we can return [i, j] as a valid partition. Otherwise, return [-1, -1].
+
+
+
+1
+// C++ program to find if the array can be divided into
+2
+// three segments by finding all possible partitions
+3
+​
+4
+#include <iostream>
+5
+#include <vector>
+6
+using namespace std;
+7
+​
+8
+// function to find the sum of subarray arr[start...end]
+9
+int findSum(vector<int> &arr, int start, int end) {
+10
+    int sum = 0;
+11
+    for(int i = start; i <= end; i++) 
+12
+        sum += arr[i];
+13
+    return sum;
+14
+}
+15
+​
+16
+// function to return the index pair of equal sum segments
+17
+vector<int> findSplit(vector<int> &arr) {
+18
+    int n = arr.size();
+19
+  
+20
+    // First partition
+21
+    for(int i = 0; i < n - 2; i++) {
+22
+        
+23
+        // Second Partition
+24
+        for(int j = i + 1; j < n - 1; j++) {
+25
+            
+26
+            // Find sum of all three segments
+27
+            int sum1 = findSum(arr, 0, i);
+28
+            int sum2 = findSum(arr, i + 1, j);
+29
+            int sum3 = findSum(arr, j + 1, n - 1);
+30
+            
+31
+            // If all three segments have equal sum,
+32
+            // then return true
+33
+            if(sum1 == sum2 && sum2 == sum3)
+34
+                return {i, j};
+35
+        }
+36
+    }
+37
+  
+38
+    // No possible index pair found
+39
+    return {-1, -1};
+40
+}
+41
+​
+42
+int main() {
+43
+    vector<int> arr = {1, 3, 4, 0, 4};
+44
+    vector<int> res = findSplit(arr);
+45
+    
+46
+    cout << res[0] << " " << res[1];
+47
+​
+48
+    return 0;
+49
+}
+
+Output
+1 2
+[Expected Approach] Finding first two segments- O(n) Time and O(1) Space
+To split the array into three equal segments, we first need to make sure that the total sum of the array is divisible by 3. Then, as we iterate through the array, we calculate the running sum. If running sum becomes equal to one-third of the total, we reset the running sum to zero and store the index as the first element of the index pair. If we find another index for which the running sum becomes equal to one-third of the total and there are still elements left for a third segment, then store the index as the second element of the index pair and return the index pair.
+
+We only need the first two segments with sum equal to one-third of the total because the remaining subarray will always be the third segment.
+
+Working:
+
+split-array-into-three-equal-sum-segments-1.webpsplit-array-into-three-equal-sum-segments-1.webp
+
+
+
+
+1
+// C++ program to find if the array can be divided into
+2
+// three segments by finding first two segments
+3
+​
+4
+#include <iostream>
+5
+#include <vector>
+6
+using namespace std;
+7
+​
+8
+// function to return the index pair of equal sum segments
+9
+vector<int> findSplit(vector<int> &arr) {
+10
+    vector<int> res;
+11
+    int total = 0;
+12
+​
+13
+    for (int ele : arr)
+14
+        total += ele;
+15
+​
+16
+    // If the total sum is not divisible by 3,
+17
+    // it's impossible to split the array
+18
+    if (total % 3 != 0) {
+19
+        res = {-1, -1};
+20
+        return res;
+21
+    }
+22
+​
+23
+    // Keep track of the sum of current segment
+24
+    int currSum = 0;
+25
+​
+
+Output
+1 2
