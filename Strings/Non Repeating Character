@@ -1,0 +1,47 @@
+// C++ program to find the index of the first non repeating
+// character by storing indices
+
+#include <iostream>
+#include <limits.h>
+#include <vector>
+using namespace std;
+
+// As the input string can only have lowercase 
+// characters, the maximum characters will be 26
+const int MAX_CHAR = 26;
+
+char nonRepeatingChar(string s) {
+    vector<int> vis(MAX_CHAR, -1);
+
+    // Iterate through the string
+    for (int i = 0; i < s.length(); i++) {
+
+        // If the character is seen for the first time,
+        // store its index
+        if (vis[s[i] - 'a'] == -1)
+            vis[s[i] - 'a'] = i;
+
+        // If the character is seen again, mark it as -2
+        else
+            vis[s[i] - 'a'] = -2;
+    }
+
+    int idx = INT_MAX;
+    
+    // Find the smallest index among all non-repeating 
+    // characters
+    for (int i = 0; i < MAX_CHAR; i++) {
+        if (vis[i] >= 0)
+            idx = min(idx, vis[i]);
+    }
+  
+    // If non-repeating character is found, return it 
+    // Else return '$'
+    return (idx == INT_MAX ? '$' : s[idx]);
+}
+
+int main() {
+    string s = "racecar";
+    cout << nonRepeatingChar(s) << endl;
+    return 0;
+}
